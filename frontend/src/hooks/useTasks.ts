@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Task } from '@/types';
+import { Task } from '../types';
 
 export function useTasks(initialTasks: Task[]) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);

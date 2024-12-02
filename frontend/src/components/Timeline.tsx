@@ -9,9 +9,9 @@ export default function Timeline() {
       
       <div className="space-y-8">
         {mockProjects.map((project) => (
-          <div key={project.id} className="bg-white rounded-lg shadow p-6">
+          <div key={project._id} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{project.name}</h2>
+              <h2 className="text-xl font-semibold">{project.projectName}</h2>
               <div className="flex items-center gap-2 text-gray-600">
                 <Calendar className="w-4 h-4" />
                 <span>{format(new Date(project.dueDate), 'MMM d, yyyy')}</span>

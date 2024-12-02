@@ -1,19 +1,24 @@
 import { Plus, Filter } from "lucide-react";
 import ProjectTable from "./ProjectTable";
-import { mockProjects } from "../data/mockData";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
+import { useProjectStore } from "../store/project";
 
 export default function Dashboard() {
-  const [data, setData] = useState<any>([]);
+  const { setProjects } = useProjectStore();
   useEffect(() => {
     fetchData();
   }, []);
 
   async function fetchData() {
-    const response = await axios.get("http://localhost:3000/get-projects");
-    console.log(response);
-    setData(response.data.response);
+    const headers = {
+      Authorization: localStorage.getItem("token"),
+    };
+    const response = await axios.get(
+      "http://localhost:3000/project/get-project",
+      {headers}
+    );
+    setProjects(response.data.projects);
   }
 
   return (
@@ -27,17 +32,29 @@ export default function Dashboard() {
           </button>
           <button
             onClick={async () => {
-              const response = await axios.post(
-                "http://localhost:3000/create-project",
-                {
-                  projectName: "Website Redesign",
-                  status: "In Progress",
-                  priority: "High",
-                  dueDate: "4/1/2024",
-                  owner: "Dipish Bisht",
+              try {
+                const headers = {
+                  Authorization: localStorage.getItem("token"),
+                };
+
+                const response = await axios.post(
+                  "http://localhost:3000/project/create-project",
+                  {
+                    projectName: "Website Redesign",
+                    status: "In Progress",
+                    priority: "High",
+                    dueDate: "2024-12-05",
+                  },
+                  { headers }
+                );
+
+              } catch (error) {
+                if (axios.isAxiosError(error)) {
+                  console.error("Axios error:", error.response?.data);
+                } else {
+                  console.error("Unknown error:", error);
                 }
-              );
-              console.log(response);
+              }
             }}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
@@ -47,7 +64,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <ProjectTable projects={data} />
+      <ProjectTable />
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import { Project } from "../types";
 import { Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useProjectStore } from "../store/project";
+import { useAuth } from "../store/auth";
 
-interface ProjectTableProps {
-  projects: Project[];
-}
-
-export default function ProjectTable({ projects }: ProjectTableProps) {
+export default function ProjectTable() {
+  const { projects } = useProjectStore();
+  const {user} = useAuth()
+  
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="overflow-x-auto">
@@ -33,7 +34,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
               <tr key={"project-" + idx} className="border-b hover:bg-gray-50">
                 <td className="p-4">
                   <Link
-                    to={`/project/${project.id}`}
+                    to={`/project/${project["_id"]}`}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     {project.projectName}
@@ -51,7 +52,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
                     {new Date(project.dueDate).toLocaleDateString()}
                   </div>
                 </td>
-                <td className="p-4">{project.owner}</td>
+                <td className="p-4">{`${user.firstName} ${user.lastName}`}</td>
               </tr>
             ))}
           </tbody>

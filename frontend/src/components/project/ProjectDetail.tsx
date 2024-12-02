@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { mockProjects } from "../../data/mockData";
 import ProjectOverview from "./ProjectOverview";
 import TaskList from "./TaskList";
 import ProjectFiles from "./ProjectFiles";
 import ProjectDiscussions from "./ProjectDiscussions";
 import TeamSection from "./TeamSection";
+import { useProjectStore } from "../../store/project";
 
 type TabType = "Overview" | "Tasks" | "Files" | "Discussions";
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState<TabType>("Overview");
-  const project = mockProjects.find((p) => p.id === id);
+  const { projects } = useProjectStore();
+  const project = projects.find((p) => p._id === id);
 
   if (!project) {
     return (
@@ -44,7 +45,7 @@ export default function ProjectDetail() {
           <div className="flex justify-between items-start mb-4">
             <div className="space-y-1">
               <h1 className="text-2xl font-bold text-gray-900">
-                {project.name}
+                {project.projectName}
               </h1>
               <p className="text-gray-600">{project.description}</p>
             </div>
