@@ -2,11 +2,10 @@ import { ToastContainer } from "react-toastify";
 import { AuthLayout } from "../../components/auth/AuthLayout";
 import { AuthButton } from "../../components/ui/AuthButton";
 import { Input } from "../../components/ui/Input";
-import { useAuthPage } from "../../store/auth";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { handleError, handleSuccess } from "../../lib/utils";
+import { DB_PREFIX, handleError, handleSuccess } from "../../lib/utils";
 import { Navbar } from "../../components/navbar";
 
 export const SignupPage: React.FC = () => {
@@ -19,7 +18,6 @@ export const SignupPage: React.FC = () => {
     confirmPassword: "",
   });
   const navigate = useNavigate();
-  const { setCurrentPage } = useAuthPage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +27,7 @@ export const SignupPage: React.FC = () => {
     if (password !== confirmPassword) return handleError("password not match");
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/auth/signup", {
+      const response = await axios.post(`${DB_PREFIX}/auth/signup`, {
         firstName,
         lastName,
         email,
@@ -120,10 +118,10 @@ export const SignupPage: React.FC = () => {
             Already have an account?{" "}
             <button
               type="button"
-              onClick={() => setCurrentPage("login")}
+              onClick={() => navigate("/login")}
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              Sign in
+              Login
             </button>
           </p>
         </form>

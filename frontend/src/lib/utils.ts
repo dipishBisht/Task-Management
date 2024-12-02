@@ -25,3 +25,5 @@ export function handleSuccess(message: string) {
     position: "top-center",
   });
 }
+
+export const DB_PREFIX = import.meta.env.VITE_BACKEND_URL;

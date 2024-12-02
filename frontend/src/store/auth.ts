@@ -1,10 +1,5 @@
 import { create } from "zustand";
-import { AuthInterface, AuthPage } from "../types";
-
-export const useAuthPage = create<AuthPage>((set) => ({
-  currentPage: "login",
-  setCurrentPage: (page) => set({ currentPage: page }),
-}));
+import { AuthInterface} from "../types";
 
 export const useAuth = create<AuthInterface>((set) => ({
   user: { firstName: "", lastName: "", email: "" },

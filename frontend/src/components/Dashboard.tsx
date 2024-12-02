@@ -3,6 +3,8 @@ import ProjectTable from "./ProjectTable";
 import { useEffect } from "react";
 import axios from "axios";
 import { useProjectStore } from "../store/project";
+import { DB_PREFIX, handleSuccess } from "../lib/utils";
+import { ToastContainer } from "react-toastify";
 
 export default function Dashboard() {
   const { setProjects } = useProjectStore();
@@ -14,11 +16,12 @@ export default function Dashboard() {
     const headers = {
       Authorization: localStorage.getItem("token"),
     };
-    const response = await axios.get(
-      "http://localhost:3000/project/get-project",
-      {headers}
-    );
-    setProjects(response.data.projects);
+    try {
+      const response = await axios.get(`${DB_PREFIX}/project/get-project`, { headers });
+      setProjects(response.data.projects);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -38,16 +41,18 @@ export default function Dashboard() {
                 };
 
                 const response = await axios.post(
-                  "http://localhost:3000/project/create-project",
+                  `${DB_PREFIX}/project/create-project`,
                   {
-                    projectName: "Website Redesign",
+                    projectName: "Websites manage",
                     status: "In Progress",
                     priority: "High",
                     dueDate: "2024-12-05",
                   },
                   { headers }
                 );
-
+                if (response.data.success)
+                  handleSuccess("Project created successfully");
+                console.log(response);
               } catch (error) {
                 if (axios.isAxiosError(error)) {
                   console.error("Axios error:", error.response?.data);
@@ -65,6 +70,7 @@ export default function Dashboard() {
       </div>
 
       <ProjectTable />
+      <ToastContainer />
     </div>
   );
 }
