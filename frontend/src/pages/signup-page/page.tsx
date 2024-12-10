@@ -46,8 +46,6 @@ export const SignupPage: React.FC = () => {
           data.errors.forEach((err: { message: string }) => {
             handleError(err.message || "Validation error occurred");
           });
-        } else {
-          handleError("An unexpected error occurred");
         }
       } else {
         handleError("Network error or server is unreachable");
@@ -63,7 +61,7 @@ export const SignupPage: React.FC = () => {
 
   return (
     <>
-      <Navbar />    
+      <Navbar />
       <AuthLayout
         title="Create an account"
         subtitle="Start managing your tasks effectively"

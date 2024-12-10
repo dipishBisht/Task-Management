@@ -36,11 +36,11 @@ const projectSchema = new mongoose_1.default.Schema({
         ref: "User",
         required: true,
     },
-    // description: {
-    //   type: String,
-    //   required: true,
-    //   maxlength: 500,
-    // },
+    description: {
+        type: String,
+        required: true,
+        maxlength: 500,
+    },
 }, { timestamps: true });
 // # Project model
 const ProjectModel = mongoose_1.default.model("Project", projectSchema);

@@ -1,30 +1,35 @@
-import { Project } from '../../types';
-import { Calendar, Flag, Users, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { Calendar, Flag, Clock } from "lucide-react";
+import { useProjectStore } from "../../store/project";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-interface ProjectOverviewProps {
-  project: Project;
-}
+export default function ProjectOverview() {
+  const { projects, fetchProjects } = useProjectStore();
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+  const { id } = useParams();
 
-export default function ProjectOverview({ project }: ProjectOverviewProps) {
+  const project = projects.find((project: any) => project._id === id);
+
   const details = [
     {
-      label: 'Due Date',
-      value: format(new Date(project.dueDate), 'MMM d, yyyy'),
+      label: "Due Date",
+      value: new Date(project.dueDate).toLocaleDateString("en-US"),
       icon: Calendar,
     },
     {
-      label: 'Priority',
+      label: "Priority",
       value: project.priority,
       icon: Flag,
     },
+    // {
+    //   label: 'Team Size',
+    //   value: `${projects.team.length} members`,
+    //   icon: Users,
+    // },
     {
-      label: 'Team Size',
-      value: `${project.team.length} members`,
-      icon: Users,
-    },
-    {
-      label: 'Status',
+      label: "Status",
       value: project.status,
       icon: Clock,
     },
@@ -35,7 +40,7 @@ export default function ProjectOverview({ project }: ProjectOverviewProps) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold mb-4">Project Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {details.map((detail) => (
+          {details.map((detail: any) => (
             <div key={detail.label} className="flex items-center gap-3">
               <div className="bg-blue-50 p-2 rounded-lg">
                 <detail.icon className="w-5 h-5 text-blue-600" />
@@ -51,7 +56,9 @@ export default function ProjectOverview({ project }: ProjectOverviewProps) {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold mb-4">Description</h2>
-        <p className="text-gray-600 whitespace-pre-wrap">{project.description}</p>
+        <p className="text-gray-600 whitespace-pre-wrap">
+          {project.description}
+        </p>
       </div>
     </div>
   );

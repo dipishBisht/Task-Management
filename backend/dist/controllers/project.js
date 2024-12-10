@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProject = exports.getProjects = void 0;
+exports.editBasicDetails = exports.createProject = exports.getProjects = void 0;
 const project_1 = __importDefault(require("../models/project"));
 const project_2 = require("../schema/project");
 // # function to get projects
@@ -31,7 +31,7 @@ const getProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getProjects = getProjects;
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { projectName, status, priority, dueDate } = req.body;
+    const { projectName, status, priority, dueDate, description } = req.body;
     const owner = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
     const result = project_2.projectSchema.safeParse({
         projectName,
@@ -39,14 +39,15 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         priority,
         dueDate,
         owner,
+        description,
     });
     if (!result.success)
         return res.status(400).json({ errors: result.error.issues });
     try {
-        const project = yield project_1.default.find({ projectName });
-        if (project.length)
+        const project = yield project_1.default.findOne({ projectName, owner });
+        if (project)
             return res
-                .status(400)
+                .status(401)
                 .json({ success: false, message: "Project with name alreay exist" });
         const response = yield project_1.default.create({
             projectName,
@@ -54,8 +55,9 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             priority,
             dueDate,
             owner,
+            description,
         });
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             data: response,
         });
@@ -68,3 +70,45 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createProject = createProject;
+const editBasicDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { projectName, status, priority, dueDate, description } = req.body;
+    const owner = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
+    const result = project_2.projectSchema.safeParse({
+        projectName,
+        status,
+        priority,
+        dueDate,
+        owner,
+        description,
+    });
+    if (!result.success)
+        return res.status(400).json({ errors: result.error.issues });
+    try {
+        const project = yield project_1.default.findOne({ projectName, owner });
+        if (project)
+            return res
+                .status(401)
+                .json({ success: false, message: "Project with name alreay exist" });
+        const response = yield project_1.default.findByIdAndUpdate(owner, {
+            projectName,
+            status,
+            priority,
+            dueDate,
+            owner,
+            description,
+        }, { new: true });
+        console.log(response);
+        return res.status(201).json({
+            success: true,
+            data: response,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error,
+        });
+    }
+});
+exports.editBasicDetails = editBasicDetails;

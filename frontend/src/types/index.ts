@@ -5,9 +5,9 @@ export interface Project {
   priority: "Low" | "Medium" | "High";
   dueDate: string;
   owner: string;
-  description: string;
-  team: TeamMember[];
-  tasks: Task[];
+  createdAt?: String;
+  updatedAt?: String;
+  _v?: String;
 }
 
 export interface TeamMember {
@@ -19,7 +19,7 @@ export interface TeamMember {
 }
 
 export interface Task {
-  id: string;
+  _id: string;
   title: string;
   status: "To Do" | "In Progress" | "Done";
   assignee: string;
@@ -37,17 +37,17 @@ export interface AuthPage {
   setCurrentPage: (page: "login" | "signup") => void;
 }
 
-export interface AuthInterface {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  setUser: (user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  }) => void;
-  isUserLoggedIn: boolean;
-  setIsUserLoggedIn: (status: boolean) => void;
-}
+// export interface AuthInterface {
+//   user: {
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//   };
+//   setUser: (user: {
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//   }) => void;
+//   isUserLoggedIn: boolean;
+//   setIsUserLoggedIn: (status: boolean) => void;
+// }

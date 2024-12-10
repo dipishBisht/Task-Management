@@ -17,7 +17,7 @@ export const getProjects = async (req: Request, res: Response) => {
 };
 
 export const createProject = async (req: Request, res: Response) => {
-  const { projectName, status, priority, dueDate } = req.body;
+  const { projectName, status, priority, dueDate, description } = req.body;
   const owner = req.user?._id;
   const result = projectSchema.safeParse({
     projectName,
@@ -25,14 +25,15 @@ export const createProject = async (req: Request, res: Response) => {
     priority,
     dueDate,
     owner,
+    description,
   });
   if (!result.success)
     return res.status(400).json({ errors: result.error.issues });
   try {
-    const project = await ProjectModel.find({ projectName });
-    if (project.length)
+    const project = await ProjectModel.findOne({ projectName, owner });
+    if (project)
       return res
-        .status(400)
+        .status(401)
         .json({ success: false, message: "Project with name alreay exist" });
     const response = await ProjectModel.create({
       projectName,
@@ -40,8 +41,53 @@ export const createProject = async (req: Request, res: Response) => {
       priority,
       dueDate,
       owner,
+      description,
     });
-    res.status(201).json({
+    return res.status(201).json({
+      success: true,
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+export const editBasicDetails = async (req: Request, res: Response) => {
+  const { projectName, status, priority, dueDate, description } = req.body;
+  const owner = req.user?._id;
+  const result = projectSchema.safeParse({
+    projectName,
+    status,
+    priority,
+    dueDate,
+    owner,
+    description,
+  });
+  if (!result.success)
+    return res.status(400).json({ errors: result.error.issues });
+  try {
+    const project = await ProjectModel.findOne({ projectName, owner });
+    if (project)
+      return res
+        .status(401)
+        .json({ success: false, message: "Project with name alreay exist" });
+    const response = await ProjectModel.findByIdAndUpdate(
+      owner,
+      {
+        projectName,
+        status,
+        priority,
+        dueDate,
+        owner,
+        description,
+      },
+      { new: true }
+    );
+    console.log(response);
+    return res.status(201).json({
       success: true,
       data: response,
     });

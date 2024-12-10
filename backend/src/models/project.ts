@@ -34,11 +34,11 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // description: {
-    //   type: String,
-    //   required: true,
-    //   maxlength: 500,
-    // },
+    description: {
+      type: String,
+      required: true, 
+      maxlength: 500,
+    },
   },
   { timestamps: true }
 );

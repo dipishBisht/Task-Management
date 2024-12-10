@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProjectOverview from "./ProjectOverview";
 import TaskList from "./TaskList";
@@ -10,10 +10,15 @@ import { useProjectStore } from "../../store/project";
 type TabType = "Overview" | "Tasks" | "Files" | "Discussions";
 
 export default function ProjectDetail() {
+  const { projects, fetchProjects } = useProjectStore();
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
   const { id } = useParams();
+
+  const project = projects.find((project: any) => project._id === id);
+
   const [activeTab, setActiveTab] = useState<TabType>("Overview");
-  const { projects } = useProjectStore();
-  const project = projects.find((p) => p._id === id);
 
   if (!project) {
     return (
@@ -26,9 +31,21 @@ export default function ProjectDetail() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "Overview":
-        return <ProjectOverview project={project} />;
+        return <ProjectOverview />;
       case "Tasks":
-        return <TaskList tasks={project.tasks} />;
+        return (
+          <TaskList
+            tasks={[
+              {
+                _id: "3",
+                title: "App Wireframes",
+                status: "To Do",
+                assignee: "Emily Davis",
+                dueDate: "2024-04-01",
+              },
+            ]}
+          />
+        );
       case "Files":
         return <ProjectFiles />;
       case "Discussions":
@@ -74,7 +91,7 @@ export default function ProjectDetail() {
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-8">{renderTabContent()}</div>
         <div className="col-span-12 lg:col-span-4">
-          <TeamSection team={project.team} />
+          <TeamSection />
         </div>
       </div>
     </div>

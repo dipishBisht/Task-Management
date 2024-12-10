@@ -6,14 +6,13 @@ interface TeamSectionProps {
   onAddMember?: () => void;
 }
 
-export default function TeamSection({ team, onAddMember }: TeamSectionProps) {
+export default function TeamSection() {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100">
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold">Team Members</h2>
           <button
-            onClick={onAddMember}
             className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
           >
             <UserPlus className="w-4 h-4" />
@@ -22,7 +21,7 @@ export default function TeamSection({ team, onAddMember }: TeamSectionProps) {
         </div>
 
         <div className="space-y-4">
-          {team.map((member) => (
+          {/* {team.map((member) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
@@ -42,7 +41,7 @@ export default function TeamSection({ team, onAddMember }: TeamSectionProps) {
                 <Mail className="w-4 h-4" />
               </button>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

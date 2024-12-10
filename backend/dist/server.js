@@ -14,7 +14,7 @@ const app = (0, express_1.default)();
 // # cors for cross origin
 app.use((0, cors_1.default)({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT"],
     credentials: true,
 }));
 // # express.json for to get json data

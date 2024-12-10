@@ -46,7 +46,7 @@ export default function TaskList({ tasks, onAddTask }: TaskListProps) {
                   .filter((task) => task.status === column)
                   .map((task) => (
                     <div
-                      key={task.id}
+                      key={task._id}
                       className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
                     >
                       <div className="flex items-start justify-between mb-2">

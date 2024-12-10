@@ -21,8 +21,8 @@ exports.projectSchema = zod_1.z.object({
         .date()
         .refine((date) => date >= new Date(), "Due date must be in the future.")),
     owner: zod_1.z.string().min(1, { message: "owner is required" }),
-    // description: z
-    //   .string()
-    //   .min(1, "Description is required.")
-    //   .max(500, "Description cannot exceed 500 characters."),
+    description: zod_1.z
+        .string()
+        .min(1, "Description is required.")
+        .max(500, "Description cannot exceed 500 characters."),
 });

@@ -9,7 +9,6 @@ import Timeline from "./components/Timeline";
 import { LoginPage } from "./pages/login-page/page";
 import { SignupPage } from "./pages/signup-page/page";
 import Home from "./pages/home-page/page";
-// import { Navbar } from "./components/navbar";
 
 function App() {
   return (

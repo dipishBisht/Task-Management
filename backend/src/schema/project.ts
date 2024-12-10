@@ -23,8 +23,8 @@ export const projectSchema = z.object({
       .refine((date) => date >= new Date(), "Due date must be in the future.")
   ),
   owner: z.string().min(1, { message: "owner is required" }),
-  // description: z
-  //   .string()
-  //   .min(1, "Description is required.")
-  //   .max(500, "Description cannot exceed 500 characters."),
+  description: z
+    .string()
+    .min(1, "Description is required.")
+    .max(500, "Description cannot exceed 500 characters."),
 });

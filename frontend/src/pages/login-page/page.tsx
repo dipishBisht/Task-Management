@@ -2,7 +2,6 @@ import axios from "axios";
 import { AuthLayout } from "../../components/auth/AuthLayout";
 import { AuthButton } from "../../components/ui/AuthButton";
 import { Input } from "../../components/ui/Input";
-import { useAuth } from "../../store/auth";
 import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -15,32 +14,44 @@ export const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
-  const { setIsUserLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formData;
-    if (!email || !password) return handleError("All field required");
+
+    if (!email || !password) {
+      handleError("All fields are required");
+      return;
+    }
+
     setIsLoading(true);
+
     try {
       const response = await axios.post(`${DB_PREFIX}/auth/login`, {
         email,
         password,
       });
 
-      if (!response.data.success) return handleError("login failed");
-
+      if (!response.data?.success) {
+        handleError("Login failed");
+        setIsLoading(false);
+        return;
+      }
+      handleSuccess("Login successful");
       localStorage.setItem("token", response.data.jwtToken);
-      setIsUserLoggedIn(true);
-      setUser(response.data.user);
-      handleSuccess("login successfully");
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 3000);
-      setTimeout(() => setIsLoading(false), 1000);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      handleError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
