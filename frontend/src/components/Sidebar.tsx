@@ -5,7 +5,6 @@ export default function Sidebar() {
   const navItems = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: Calendar, label: 'Timeline', path: '/timeline' },
-    { icon: Users, label: 'Team', path: '/team' },
     { icon: Settings, label: 'Settings', path: '/settings' }
   ];
 

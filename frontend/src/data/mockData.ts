@@ -1,4 +1,4 @@
-import { Project, TeamMember } from "../types";
+import { Notification, TeamMember } from "../types";
 
 export const teamMembers: TeamMember[] = [
   {
@@ -92,5 +92,49 @@ export const mockProjects: Project[] = [
         dueDate: "2024-03-10",
       },
     ],
+  },
+];
+
+
+export const mockNotifications: Notification[] = [
+  {
+    id: '1',
+    type: 'message',
+    title: 'New Message from Sarah',
+    message: 'Hey! Just checking in about the project progress...',
+    time: '5 minutes ago',
+    read: false,
+  },
+  {
+    id: '2',
+    type: 'alert',
+    title: 'System Update',
+    message: 'Your account security settings were updated',
+    time: '1 hour ago',
+    read: false,
+  },
+  {
+    id: '3',
+    type: 'email',
+    title: 'New Email Newsletter',
+    message: 'Check out our latest features and updates!',
+    time: '2 hours ago',
+    read: true,
+  },
+  {
+    id: '4',
+    type: 'delivery',
+    title: 'Package Delivered',
+    message: 'Your order #12345 has been delivered',
+    time: '1 day ago',
+    read: true,
+  },
+  {
+    id: '5',
+    type: 'mention',
+    title: 'You were mentioned',
+    message: '@alex mentioned you in the design team chat',
+    time: '2 days ago',
+    read: true,
   },
 ];

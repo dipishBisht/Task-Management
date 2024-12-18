@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
-import Team from "./components/Team";
 import Settings from "./components/Settings";
 import ProjectDetail from "./components/project/ProjectDetail";
 import Dashboard from "./components/Dashboard";
@@ -9,6 +8,7 @@ import Timeline from "./components/Timeline";
 import { LoginPage } from "./pages/login-page/page";
 import { SignupPage } from "./pages/signup-page/page";
 import Home from "./pages/home-page/page";
+import Notification from "./pages/notification-page/page";
 
 function App() {
   return (
@@ -32,9 +32,9 @@ function App() {
                   <main className="mt-16">
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/notifications" element={<Notification />} />
                       <Route path="/project/:id" element={<ProjectDetail />} />
                       <Route path="/timeline" element={<Timeline />} />
-                      <Route path="/team" element={<Team />} />
                       <Route path="/settings" element={<Settings />} />
                     </Routes>
                   </main>

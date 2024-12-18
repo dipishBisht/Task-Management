@@ -4,10 +4,15 @@ import { handleSuccess } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useSearchProjectStore } from "../store/project";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const navigate = useNavigate();
+  const [notificationCount, setNotificationCount] = useState(0);
   const { searchProject, setSearchProject } = useSearchProjectStore();
+  // useEffect(() => {
+  //   setNotificationCount(unreadCount);
+  // }, [notificationCount]);
   return (
     <>
       <header className="h-16 bg-white border-b flex items-center justify-between px-6 fixed top-0 right-0 left-64">
@@ -23,10 +28,13 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="relative">
+          <button
+            className="relative"
+            onClick={() => navigate("/notifications")}
+          >
             <Bell className="w-6 h-6 text-gray-600" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-              0
+              {notificationCount}
             </span>
           </button>
           <div className="flex items-center gap-4">

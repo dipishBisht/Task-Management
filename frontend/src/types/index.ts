@@ -37,17 +37,23 @@ export interface AuthPage {
   setCurrentPage: (page: "login" | "signup") => void;
 }
 
-// export interface AuthInterface {
-//   user: {
-//     firstName: string;
-//     lastName: string;
-//     email: string;
-//   };
-//   setUser: (user: {
-//     firstName: string;
-//     lastName: string;
-//     email: string;
-//   }) => void;
-//   isUserLoggedIn: boolean;
-//   setIsUserLoggedIn: (status: boolean) => void;
-// }
+export type NotificationType =
+  | "message"
+  | "alert"
+  | "email"
+  | "delivery"
+  | "mention";
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+}
+
+export interface NotificationItemProps {
+  notification: Notification;
+  onRead: (id: string) => void;
+}

@@ -108,9 +108,6 @@ export default function ProjectTable() {
     }
   };
 
-  const dataString = localStorage.getItem("user");
-  const data = dataString ? JSON.parse(dataString) : null;
-
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="overflow-x-auto">
@@ -129,7 +126,6 @@ export default function ProjectTable() {
               <th className="text-left p-4 font-medium text-gray-600">
                 Due Date
               </th>
-              <th className="text-left p-4 font-medium text-gray-600">Owner</th>
               <th className="text-left p-4 font-medium text-gray-600">Edit</th>
             </tr>
           </thead>
@@ -156,7 +152,6 @@ export default function ProjectTable() {
                     {new Date(project.dueDate).toLocaleDateString()}
                   </div>
                 </td>
-                <td className="p-4">{`${data.firstName} ${data.lastName}`}</td>
                 <td
                   className="p-4 cursor-pointer"
                   onClick={() => handleEditClick(project)}
