@@ -13,6 +13,7 @@ export default function ProjectTable() {
   const [filteredProjects, setFilteredProjects] = useState(projects);
   const [isFormOpen, setIsFormOpen] = useState<string | null>(null);
   const [formData, setFormData] = useState({
+    projectId: "",
     projectName: "",
     status: "",
     priority: "",
@@ -41,15 +42,18 @@ export default function ProjectTable() {
   const handleEditClick = (project: any) => {
     setIsFormOpen(project._id);
     setFormData({
+      projectId: project._id,
       projectName: project.projectName,
       status: project.status,
       priority: project.priority,
-      dueDate: new Date(project.dueDate).toLocaleDateString(),
+      dueDate: new Date(project.dueDate).toISOString().split("T")[0],
       description: project.description,
     });
   };
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -107,6 +111,39 @@ export default function ProjectTable() {
       }
     }
   };
+
+  async function deleteProject(e: React.FormEvent) {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("User is not authenticated");
+      const headers = {
+        Authorization: token,
+      };
+
+      const response = await axios.delete(
+        `${DB_PREFIX}/project/${formData.projectId}`,
+        {
+          headers,
+        }
+      );
+
+      if (response.status === 200) {
+        handleSuccess("Project deleted successfully");
+        setIsFormOpen(null);
+        setTimeout(() => fetchProjects(), 1500);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete the project";
+        handleError(errorMessage);
+      } else {
+        handleError("An unknown error occurred");
+        console.error("Unknown error:", error);
+      }
+    }
+  }
 
   return (
     <div className="bg-white rounded-lg shadow">
@@ -167,7 +204,15 @@ export default function ProjectTable() {
       {/* Edit Form */}
       {isFormOpen && (
         <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg w-96">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsFormOpen(null)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+            >
+              ✕
+            </button>
+
             <h2 className="text-xl font-semibold mb-4">Edit Project</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -187,27 +232,33 @@ export default function ProjectTable() {
                 <label className="block text-sm font-medium text-gray-600">
                   Status
                 </label>
-                <input
-                  type="text"
+                <select
                   name="status"
                   value={formData.status}
                   onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded mt-1"
                   required
-                />
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-600">
                   Priority
                 </label>
-                <input
-                  type="text"
+                <select
                   name="priority"
                   value={formData.priority}
                   onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded mt-1"
                   required
-                />
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-600">
@@ -231,9 +282,15 @@ export default function ProjectTable() {
                   value={formData.description}
                   onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded mt-1"
-                ></input>
+                />
               </div>
-              <div className="flex justify-end">
+              <div className="flex gap-2 justify-end">
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded"
+                  onClick={deleteProject}
+                >
+                  Delete
+                </button>
                 <button
                   type="submit"
                   className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -251,10 +308,9 @@ export default function ProjectTable() {
 
 function StatusBadge({ status }: { status: Project["status"] }) {
   const colors = {
+    Pending: "bg-gray-100 text-gray-800",
     "In Progress": "bg-blue-100 text-blue-800",
-    Done: "bg-green-100 text-green-800",
-    Stuck: "bg-red-100 text-red-800",
-    "Not Started": "bg-gray-100 text-gray-800",
+    Completed: "bg-green-100 text-green-800",
   };
 
   return (

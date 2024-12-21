@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProject, getProjects,editBasicDetails } from "../controllers/project";
+import { createProject, getProjects,editBasicDetails,deleteProject } from "../controllers/project";
 
 const router = Router();
 
@@ -11,4 +11,6 @@ router.get("/get-project",getProjects)
 router.post("/create-project",createProject)
 
 router.put("/edit-basic-details",editBasicDetails)
+
+router.delete("/:id",deleteProject)
 export default router;

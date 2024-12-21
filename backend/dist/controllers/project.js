@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editBasicDetails = exports.createProject = exports.getProjects = void 0;
+exports.deleteProject = exports.editBasicDetails = exports.createProject = exports.getProjects = void 0;
 const project_1 = __importDefault(require("../models/project"));
 const project_2 = require("../schema/project");
 // # function to get projects
@@ -72,7 +72,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.createProject = createProject;
 const editBasicDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { projectName, status, priority, dueDate, description } = req.body;
+    const { projectName, status, priority, dueDate, description, projectId } = req.body;
     const owner = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
     const result = project_2.projectSchema.safeParse({
         projectName,
@@ -85,12 +85,7 @@ const editBasicDetails = (req, res) => __awaiter(void 0, void 0, void 0, functio
     if (!result.success)
         return res.status(400).json({ errors: result.error.issues });
     try {
-        const project = yield project_1.default.findOne({ projectName, owner });
-        if (project)
-            return res
-                .status(401)
-                .json({ success: false, message: "Project with name alreay exist" });
-        const response = yield project_1.default.findByIdAndUpdate(owner, {
+        const response = yield project_1.default.findByIdAndUpdate(projectId, {
             projectName,
             status,
             priority,
@@ -112,3 +107,18 @@ const editBasicDetails = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.editBasicDetails = editBasicDetails;
+const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        yield project_1.default.findByIdAndDelete(id);
+        res
+            .status(200)
+            .json({ success: true, message: "Project deleted successfully" });
+    }
+    catch (error) {
+        res
+            .status(500)
+            .json({ success: false, message: "Failed to delete project" });
+    }
+});
+exports.deleteProject = deleteProject;

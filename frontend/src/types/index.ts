@@ -1,7 +1,7 @@
 export interface Project {
   _id: string;
   projectName: string;
-  status: "In Progress" | "Done" | "Stuck" | "Not Started";
+  status: "Pending" | "In Progress" | "Completed";
   priority: "Low" | "Medium" | "High";
   dueDate: string;
   owner: string;

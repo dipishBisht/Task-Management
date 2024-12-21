@@ -13,7 +13,7 @@ const projectSchema = new mongoose_1.default.Schema({
     },
     status: {
         type: String,
-        enum: ["In Progress", "Not Started", "Done"],
+        enum: ["Pending", "In Progress", "Completed"],
         required: true,
     },
     priority: {

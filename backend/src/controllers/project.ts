@@ -56,7 +56,8 @@ export const createProject = async (req: Request, res: Response) => {
 };
 
 export const editBasicDetails = async (req: Request, res: Response) => {
-  const { projectName, status, priority, dueDate, description } = req.body;
+  const { projectName, status, priority, dueDate, description, projectId } =
+    req.body;
   const owner = req.user?._id;
   const result = projectSchema.safeParse({
     projectName,
@@ -69,13 +70,8 @@ export const editBasicDetails = async (req: Request, res: Response) => {
   if (!result.success)
     return res.status(400).json({ errors: result.error.issues });
   try {
-    const project = await ProjectModel.findOne({ projectName, owner });
-    if (project)
-      return res
-        .status(401)
-        .json({ success: false, message: "Project with name alreay exist" });
     const response = await ProjectModel.findByIdAndUpdate(
-      owner,
+      projectId,
       {
         projectName,
         status,
@@ -96,5 +92,19 @@ export const editBasicDetails = async (req: Request, res: Response) => {
       success: false,
       message: error,
     });
+  }
+};
+
+export const deleteProject = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    await ProjectModel.findByIdAndDelete(id);
+    res
+      .status(200)
+      .json({ success: true, message: "Project deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to delete project" });
   }
 };
